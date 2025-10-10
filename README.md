@@ -19,18 +19,19 @@ Micro-service expense-splitter that calculates the **minimum number of transacti
 | expense-service | CRUD expense + splits                   | 8083 |
 | settlement-service | Min-transaction algorithm & ledger   | 8084 |
 
-## Local Quick-start
+<!-- ## Local Quick-start
 ```bash
-docker-compose up -d   # MySQL + phpMyAdmin
-mvn clean install      # root folder
+docker-compose up -d
+mvn clean install
 mvn spring-boot:run -pl app/auth-service
-```
+``` -->
 
 ## API docs (Swagger) at
    http://localhost:8081/swagger-ui.html **(once controllers are implemented).
 
 ## Road-map
-[ ] Week-1  : Auth + Group CRUD
-[ ] Week-2  : Expense & split engine
-[ ] Week-3  : Settlement algo (greedy + DFS)
-[ ] Week-4  : Kafka events, CI/CD, Railway deploy
+- Week-1  : Auth + Group CRUD
+- Week-2  : Expense & split engine
+- Week-3  : Settlement algo (greedy + DFS)
+- Week-4  : Kafka events, CI/CD, Railway deploy
+
