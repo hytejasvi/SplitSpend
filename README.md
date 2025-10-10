@@ -24,9 +24,12 @@ Micro-service expense-splitter that calculates the **minimum number of transacti
 docker-compose up -d   # MySQL + phpMyAdmin
 mvn clean install      # root folder
 mvn spring-boot:run -pl app/auth-service
+```
 
-API docs (Swagger) at http://localhost:8081/swagger-ui.html once controllers land.
-Road-map
+## API docs (Swagger) at
+   http://localhost:8081/swagger-ui.html **(once controllers are implemented).
+
+## Road-map
 [ ] Week-1  : Auth + Group CRUD
 [ ] Week-2  : Expense & split engine
 [ ] Week-3  : Settlement algo (greedy + DFS)
