@@ -10,10 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class RegisterRequestDto {
 
-    @NotNull
-    @Email
-    private String email;
+  @NotNull @Email private String email;
 
-    @NotBlank
-    private String password;
+  @NotBlank private String password;
 }
