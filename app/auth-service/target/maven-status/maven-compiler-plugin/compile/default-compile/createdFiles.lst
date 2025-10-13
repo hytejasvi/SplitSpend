@@ -1,7 +1,14 @@
-com\splitspend\auth\AuthService.class
+com\splitspend\auth\service\exception\UserNotRegisteredServiceException.class
 com\splitspend\auth\controller\AuthController.class
-com\splitspend\auth\service\UserAuthService.class
+com\splitspend\auth\service\exception\UserAuthenticationException.class
 com\splitspend\auth\controller\AuthResponseDto.class
-com\splitspend\auth\controller\RegisterRequestDto.class
 com\splitspend\auth\entity\User.class
+com\splitspend\auth\AuthServiceApplication.class
+com\splitspend\auth\controller\GlobalExceptionHandler$ErrorResponse.class
+com\splitspend\auth\controller\GlobalExceptionHandler.class
+com\splitspend\auth\service\UserAuthService.class
+com\splitspend\auth\controller\LoginRequestDto.class
+com\splitspend\auth\config\SpringSecurity.class
+com\splitspend\auth\controller\RegisterRequestDto.class
 com\splitspend\auth\repository\UserRepository.class
+com\splitspend\auth\service\exception\ServiceException.class

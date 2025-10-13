@@ -1,46 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserAuthService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">auth-com.splitspend.auth.service</a> &gt; <a href="index.source.html" class="el_package">com.splitspend.auth.service</a> &gt; <span class="el_source">UserAuthService.java</span></div><h1>UserAuthService.java</h1><pre class="source lang-java linenums">package com.splitspend.auth.service;
 
 import com.splitspend.auth.controller.AuthResponseDto;
+import com.splitspend.auth.controller.LoginRequestDto;
 import com.splitspend.auth.controller.RegisterRequestDto;
 import com.splitspend.auth.entity.User;
-import org.springframework.stereotype.Service;
 import com.splitspend.auth.repository.UserRepository;
-
+import com.splitspend.auth.service.exception.UserAuthenticationException;
+import com.splitspend.auth.service.exception.UserNotRegisteredServiceException;
 import java.time.Instant;
 import java.util.Date;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserAuthService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-<span class="fc" id="L17">    public UserAuthService(UserRepository userRepository) {</span>
-<span class="fc" id="L18">        this.userRepository = userRepository;</span>
-<span class="fc" id="L19">    }</span>
+  private final PasswordEncoder passwordEncoder;
 
-    public AuthResponseDto userRegistration(RegisterRequestDto requestDto) {
+<span class="fc" id="L22">  public UserAuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {</span>
+<span class="fc" id="L23">    this.userRepository = userRepository;</span>
+<span class="fc" id="L24">    this.passwordEncoder = passwordEncoder;</span>
+<span class="fc" id="L25">  }</span>
 
-<span class="fc" id="L23">        User savedUser = checkIfExistingUser(requestDto);</span>
+  public AuthResponseDto userRegistration(RegisterRequestDto requestDto) {
 
-<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        if (savedUser == null) {</span>
-<span class="nc" id="L26">            savedUser = createNewUser(requestDto);</span>
-        }
+<span class="fc" id="L29">    User savedUser = checkIfExistingUser(requestDto);</span>
 
-<span class="fc" id="L29">        return new AuthResponseDto(savedUser.getId(), savedUser.getEmail(), savedUser.getCreatedAt());</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">    if (savedUser == null) {</span>
+<span class="nc" id="L32">      savedUser = createNewUser(requestDto);</span>
     }
 
-    private User checkIfExistingUser(RegisterRequestDto requestDto) {
-<span class="fc" id="L33">        return userRepository.findByEmail(requestDto.getEmail()).orElse(null);</span>
-    }
+<span class="fc" id="L35">    return new AuthResponseDto(savedUser.getId(), savedUser.getEmail(), savedUser.getCreatedAt());</span>
+  }
 
-    private User createNewUser(RegisterRequestDto requestDto) {
-<span class="nc" id="L37">        User user = new User</span>
-                (
-<span class="nc" id="L39">                        requestDto.getEmail(),</span>
-<span class="nc" id="L40">                        requestDto.getPassword(),</span>
-<span class="nc" id="L41">                        Date.from(Instant.now())</span>
-                );
-<span class="nc" id="L43">        return userRepository.save(user);</span>
+  public AuthResponseDto userLogin(LoginRequestDto requestDto) {
+<span class="fc" id="L39">    User user =</span>
+        userRepository
+<span class="fc" id="L41">            .findByEmail(requestDto.email())</span>
+<span class="fc" id="L42">            .orElseThrow(</span>
+                () -&gt;
+<span class="nc" id="L44">                    new UserNotRegisteredServiceException(</span>
+<span class="nc" id="L45">                        &quot;%s is not a registered email&quot; + requestDto.email()));</span>
+
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">    if (passwordEncoder.matches(requestDto.password(), user.getPassword())) {</span>
+<span class="nc" id="L48">      return new AuthResponseDto(user.getId(), user.getEmail(), user.getCreatedAt());</span>
+    } else {
+<span class="fc" id="L50">      throw new UserAuthenticationException(&quot;Incorrect password&quot;);</span>
     }
+  }
+
+  private User checkIfExistingUser(RegisterRequestDto requestDto) {
+<span class="fc" id="L55">    return userRepository.findByEmail(requestDto.getEmail()).orElse(null);</span>
+  }
+
+  private User createNewUser(RegisterRequestDto requestDto) {
+<span class="nc" id="L59">    String encodedPassword = passwordEncoder.encode(requestDto.getPassword());</span>
+<span class="nc" id="L60">    User user = new User(requestDto.getEmail(), encodedPassword, Date.from(Instant.now()));</span>
+<span class="nc" id="L61">    return userRepository.save(user);</span>
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

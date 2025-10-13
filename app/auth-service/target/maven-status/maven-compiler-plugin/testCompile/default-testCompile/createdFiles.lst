@@ -1,1 +1,2 @@
 com\splitspend\auth\controller\AuthControllerIntegrationTest.class
+com\splitspend\auth\config\TestSecurityConfig.class
